@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'Books API', type: :request do
-  let(:first_author) { FactoryBot.create(:author, first_name: 'Igni', last_name: 'Odin', age: 33 ) }
+  let(:first_author) { FactoryBot.create(:author, first_name: 'Igni', last_name: 'Odin', age: 19 ) }
   let(:second_author) { FactoryBot.create(:author, first_name: 'Agni', last_name: 'Dionis', age: 33 ) }
 
   describe 'GET /books' do
@@ -14,7 +14,23 @@ describe 'Books API', type: :request do
       get '/api/v1/books'
 
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body).size).to eq(2)
+      expect(response_body.size).to eq(2)
+      expect(response_body).to eq(
+        [
+          {
+            'id' => 1,
+            'title' => '1824',
+            'author_name' => 'Igni Odin',
+            'author_age' => 19
+          },
+          {
+            'id' => 2,
+            'title' => 'time',
+            'author_name' => 'Agni Dionis',
+            'author_age' => 33
+          }
+        ]
+      )
     end
   end
 
@@ -33,7 +49,7 @@ describe 'Books API', type: :request do
         {
           'id' => 1,
           'title' => 'The martians',
-          'author_name'=> 'Kiipling Weider',
+          'author_name' => 'Kiipling Weider',
           'author_age' => 19
         }
       )
