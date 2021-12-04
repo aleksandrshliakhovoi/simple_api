@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'net/http'
 module Api
   module V1
     class BooksController < ApplicationController
@@ -15,6 +16,8 @@ module Api
 
         # cause book have onlty one param, we need to id from data
         book = Book.new(book_params.merge(author_id: author.id))
+
+        UpdateSkuJob.perform_later(book_params[:name])
 
         if book.save
           render json: BookRepresenter.new(book).as_json, status: :created
