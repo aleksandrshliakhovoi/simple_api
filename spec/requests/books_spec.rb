@@ -1,10 +1,13 @@
 require 'rails_helper'
 
 describe 'Books API', type: :request do
+  let(:first_author) { FactoryBot.create(:author, first_name: 'Igni', last_name: 'Odin', age: 33 ) }
+  let(:second_author) { FactoryBot.create(:author, first_name: 'Agni', last_name: 'Dionis', age: 33 ) }
+
   describe 'GET /books' do
     before do
-      FactoryBot.create(:book, title: '1824', author: 'Russo')
-      FactoryBot.create(:book, title: 'time', author: 'walles')
+      FactoryBot.create(:book, title: '1824', author: first_author)
+      FactoryBot.create(:book, title: 'time', author: second_author)
     end
 
     it 'returns all books' do
@@ -26,11 +29,19 @@ describe 'Books API', type: :request do
 
       expect(Author.count).to eq(1)
       expect(response).to have_http_status(:created)
+      expect(JSON.parse(response.body)).to eq(
+        {
+          'id' => 1,
+          'title' => 'The martians',
+          'author_name'=> 'Kiipling Weider',
+          'author_age' => 19
+        }
+      )
     end
   end
 
   describe 'DELETE /books/:id' do
-    let!(:book) { FactoryBot.create(:book, title: '1824', author: 'Russo') }
+    let!(:book) { FactoryBot.create(:book, title: '1824', author: first_author) }
 
     it 'deletes a book' do
       expect {
