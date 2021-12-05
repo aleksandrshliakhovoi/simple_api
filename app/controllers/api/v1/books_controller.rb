@@ -17,7 +17,7 @@ module Api
         # cause book have onlty one param, we need to id from data
         book = Book.new(book_params.merge(author_id: author.id))
 
-        UpdateSkuJob.perform_later(book_params[:name])
+        UpdateSkuJob.perform_later(book_params[:title])
 
         if book.save
           render json: BookRepresenter.new(book).as_json, status: :created
