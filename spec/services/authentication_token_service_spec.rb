@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe AuthenticationTokenService do
   describe '.call' do
-    let(:token) { described_class.call }
+    let(:token) { described_class.call(1) }
 
     it 'returns an authentication token' do
       decoded_token = JWT.decode(
@@ -14,8 +14,8 @@ describe AuthenticationTokenService do
 
       expect(decoded_token).to eq(
         [
-          {"test"=>"123"}, # payload
-          {"alg"=>"HS256"} # header
+          {"user_id" => 1}, # payload
+          {"alg" =>"HS256"} # header
         ]
       )
     end
