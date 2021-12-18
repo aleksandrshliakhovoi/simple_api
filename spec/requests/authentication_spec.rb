@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'Authentication', type: :request do
   describe 'POST /authenticate' do
-    let!(:user) { FactoryBot.create(:user, username: 'Bokkseller') }
+    let!(:user) { FactoryBot.create(:user, username: 'Bokkseller', password: 'Password1') }
 
     it 'authenticate the client' do
       post '/api/v1/authenticate', params: { username: user.username, password: 'Password1' }
@@ -27,6 +27,12 @@ describe 'Authentication', type: :request do
 
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response_body).to include('error')
+    end
+
+    it 'returns error when password is incorrect' do
+      post '/api/v1/authenticate', params: { username: user.username, password: 'incorrect' }
+
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 end
